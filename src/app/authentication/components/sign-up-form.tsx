@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -128,7 +128,7 @@ const SignUpForm = () => {
               disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? (
-                <Loader className="2-4 mr-2 h-4 animate-spin" />
+                <Loader2 className="2-4 mr-2 h-4 animate-spin" />
               ) : (
                 "Criar conta"
               )}

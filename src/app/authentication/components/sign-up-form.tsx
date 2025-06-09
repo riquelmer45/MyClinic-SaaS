@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -63,11 +63,11 @@ const SignUpForm = () => {
           router.push("/dashboard");
         },
         onError: (ctx) => {
-            if (ctx.error.code === "USER_ALREADY_EXIST") {
-                toast.error("E-mail já cadastrado!")
-            }
-            toast.error("Erro ao criar a conta!")
-        }
+          if (ctx.error.code === "USER_ALREADY_EXIST") {
+            toast.error("E-mail já cadastrado!");
+          }
+          toast.error("Erro ao criar a conta!");
+        },
       },
     );
   }

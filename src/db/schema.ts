@@ -64,7 +64,6 @@ export const verificationTable = pgTable("verifications", {
   updatedAt: timestamp("updated_at"),
 });
 
-
 export const clinicsTable = pgTable("clinics", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -122,7 +121,7 @@ export const doctorsTable = pgTable("doctors", {
   availableFromTime: time("available_from_time").notNull(),
   availableToTime: time("available_to_time").notNull(),
   specialty: text("specialty").notNull(),
-  appointementPriceInCents: integer("appointement_price_in_cents").notNull(),
+  appointmentPriceInCents: integer("appointement_price_in_cents").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

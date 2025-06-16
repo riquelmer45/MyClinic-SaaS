@@ -102,7 +102,7 @@ export const usersToClinicsTableRelations = relations(
 
 export const clinicsTableRelations = relations(clinicsTable, ({ many }) => ({
   doctors: many(doctorsTable),
-  pacients: many(pacientsTable),
+  patients: many(patientsTable),
   appointments: many(appointmentsTable),
   usersToClinics: many(usersToClinicsTable),
 }));
@@ -139,34 +139,34 @@ export const doctorsTableRelations = relations(
   }),
 );
 
-export const pacientSexEnum = pgEnum("pacient_sex", ["male", "female"]);
+export const patientsexEnum = pgEnum("pacient_sex", ["male", "female"]);
 
-export const pacientStatusEnum = pgEnum("pacient_status", [
+export const patientstatusEnum = pgEnum("pacient_status", [
   "archived",
   "active",
 ]);
 
-export const pacientsTable = pgTable("patients", {
+export const patientsTable = pgTable("patients", {
   id: uuid("id").defaultRandom().primaryKey(),
   clinicId: uuid("clinic_id")
     .notNull()
     .references(() => clinicsTable.id, { onDelete: "cascade" }),
-  status: pacientStatusEnum("status").notNull(),
+  status: patientstatusEnum("status").notNull(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   phoneNumber: text("phone_number").notNull(),
-  sex: pacientSexEnum("sex").notNull(),
+  sex: patientsexEnum("sex").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const pacientsTableRelations = relations(
-  pacientsTable,
+export const patientsTableRelations = relations(
+  patientsTable,
   ({ one, many }) => ({
     clinic: one(clinicsTable, {
-      fields: [pacientsTable.clinicId],
+      fields: [patientsTable.clinicId],
       references: [clinicsTable.id],
     }),
     appointments: many(appointmentsTable),
@@ -181,7 +181,7 @@ export const appointmentsTable = pgTable("appointments", {
     .references(() => clinicsTable.id, { onDelete: "cascade" }),
   pacientId: uuid("patient_id")
     .notNull()
-    .references(() => pacientsTable.id, { onDelete: "cascade" }),
+    .references(() => patientsTable.id, { onDelete: "cascade" }),
   doctorId: uuid("doctor_id")
     .notNull()
     .references(() => doctorsTable.id, { onDelete: "cascade" }),
@@ -198,9 +198,9 @@ export const appointmentsTableRelations = relations(
       fields: [appointmentsTable.clinicId],
       references: [clinicsTable.id],
     }),
-    pacient: one(pacientsTable, {
+    pacient: one(patientsTable, {
       fields: [appointmentsTable.pacientId],
-      references: [pacientsTable.id],
+      references: [patientsTable.id],
     }),
     doctor: one(doctorsTable, {
       fields: [appointmentsTable.doctorId],

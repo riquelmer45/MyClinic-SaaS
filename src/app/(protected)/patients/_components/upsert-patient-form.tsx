@@ -45,11 +45,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { pacientsTable } from "@/db/schema";
+import { patientsTable } from "@/db/schema";
 
 interface UpsertPatientFormProps {
   isOpen: boolean;
-  patient?: typeof pacientsTable.$inferSelect;
+  patient?: typeof patientsTable.$inferSelect;
   onSuccess?: () => void;
 }
 

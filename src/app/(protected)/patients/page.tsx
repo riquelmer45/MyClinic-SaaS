@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { DataTable } from "@/components/ui/data-table";
 import {
   PageActions,
   PageContainer,
@@ -12,11 +13,11 @@ import {
   PageTitle,
 } from "@/components/ui/page-container";
 import { db } from "@/db";
-import { pacientsTable } from "@/db/schema";
+import { patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import AddPatientButton from "./_components/add-patient-button";
-import PatientCard from "./_components/patient-card";
+import { patientTableColumns } from "./_components/table-columns";
 
 export default async function PatientsPage() {
   const session = await auth.api.getSession({
@@ -31,8 +32,8 @@ export default async function PatientsPage() {
     redirect("/clinic-form");
   }
 
-  const patients = await db.query.pacientsTable.findMany({
-    where: eq(pacientsTable.clinicId, session.user.clinic.id),
+  const patients = await db.query.patientsTable.findMany({
+    where: eq(patientsTable.clinicId, session.user.clinic.id),
     orderBy: (patients) => [patients.name],
   });
 
@@ -50,11 +51,7 @@ export default async function PatientsPage() {
         </PageActions>
       </PageHeader>
       <PageContent>
-        <div className="grid grid-cols-3 gap-6">
-          {patients.map((patient) => (
-            <PatientCard key={patient.id} patient={patient} />
-          ))}
-        </div>
+        <DataTable data={patients} columns={patientTableColumns} />
       </PageContent>
     </PageContainer>
   );

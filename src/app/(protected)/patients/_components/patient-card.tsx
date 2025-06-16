@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { pacientsTable } from "@/db/schema";
+import { patientsTable } from "@/db/schema";
 
 import UpsertPatientForm from "./upsert-patient-form";
 
 interface PatientCardProps {
-  patient: typeof pacientsTable.$inferSelect;
+  patient: typeof patientsTable.$inferSelect;
 }
 
 const PatientCard = ({ patient }: PatientCardProps) => {

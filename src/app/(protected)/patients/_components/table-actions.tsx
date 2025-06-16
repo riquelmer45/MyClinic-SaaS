@@ -1,7 +1,21 @@
 "use client";
 import { EditIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
+import { toast } from "sonner";
 
+import { deletePatient } from "@/actions/delete-patient";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import {
@@ -18,11 +32,30 @@ import UpsertPatientForm from "./upsert-patient-form";
 
 interface PatientActionsProps {
   patient: typeof patientsTable.$inferSelect;
+  onDeleteSuccess?: () => void;
 }
 
-const PatientsTableActions = ({ patient }: PatientActionsProps) => {
+const PatientsTableActions = ({
+  patient,
+  onDeleteSuccess,
+}: PatientActionsProps) => {
   const [isUpsertPatientDialogOpen, setIsUpsertPatientDialogOpen] =
     useState(false);
+
+  const deletePatientAction = useAction(deletePatient, {
+    onSuccess: () => {
+      toast.success("Paciente deletado com sucesso!");
+      onDeleteSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao deletar paciente");
+    },
+  });
+
+  const handleDeletePatientClick = () => {
+    deletePatientAction.execute({ id: patient.id });
+  };
+
   return (
     <Dialog
       open={isUpsertPatientDialogOpen}
@@ -36,15 +69,36 @@ const PatientsTableActions = ({ patient }: PatientActionsProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>{patient.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator />{" "}
           <DropdownMenuItem onClick={() => setIsUpsertPatientDialogOpen(true)}>
             <EditIcon className="mr-2 h-4 w-4" />
             Editar
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TrashIcon className="mr-2 h-4 w-4" />
-            Excluir
-          </DropdownMenuItem>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <TrashIcon className="mr-2 h-4 w-4" />
+                Excluir
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Você tem certeza que deseja deletar este paciente?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta ação não pode ser desfeita. Isso irá deletar os dados do
+                  paciente e todas as consultas agendadas.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeletePatientClick}>
+                  Deletar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
 

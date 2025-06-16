@@ -1,27 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TrashIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { deletePatient } from "@/actions/delete-patient";
 import { upsertPatient } from "@/actions/upsert-patient";
 import { upsertPatientSchema } from "@/actions/upsert-patient/schema";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -92,22 +79,6 @@ const UpsertPatientForm = ({
       );
     },
   });
-
-  const deletePatientAction = useAction(deletePatient, {
-    onSuccess: () => {
-      toast.success("Paciente deletado com sucesso!");
-      form.reset();
-      onSuccess?.();
-    },
-    onError: () => {
-      toast.error("Erro ao deletar paciente");
-    },
-  });
-
-  const handleDeletePatientClick = () => {
-    if (!patient) return;
-    deletePatientAction.execute({ id: patient.id ?? "" });
-  };
 
   // Função para aplicar máscara de telefone
   const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,35 +186,8 @@ const UpsertPatientForm = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          />{" "}
           <DialogFooter className={!patient ? "flex-col" : ""}>
-            {patient && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">
-                    <TrashIcon />
-                    Deletar paciente
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Você tem certeza que deseja deletar este paciente?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Esta ação não pode ser desfeita. Isso irá deletar os dados
-                      do paciente e todas as consultas agendadas.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDeletePatientClick}>
-                      Deletar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
             <Button
               className={!patient ? "w-full" : ""}
               type="submit"

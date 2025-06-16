@@ -37,7 +37,15 @@ export const patientTableColumns: ColumnDef<Patient>[] = [
     id: "actions",
     cell: (params) => {
       const patient = params.row.original;
-      return <PatientsTableActions patient={patient} />;
+      return (
+        <PatientsTableActions
+          patient={patient}
+          onDeleteSuccess={() => {
+            // Força a revalidação da página após a exclusão
+            window.location.reload();
+          }}
+        />
+      );
     },
   },
 ];

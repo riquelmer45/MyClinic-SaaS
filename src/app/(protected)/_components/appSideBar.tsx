@@ -45,14 +45,14 @@ const items = [
     icon: CalendarDays,
   },
   {
-    title: "Médicos",
-    url: "/doctors",
-    icon: Stethoscope,
-  },
-  {
     title: "Pacientes",
     url: "/patients",
     icon: Users,
+  },
+  {
+    title: "Médicos",
+    url: "/doctors",
+    icon: Stethoscope,
   },
 ];
 

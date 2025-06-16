@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
-import { pacientsTable, pacientStatusEnum } from "@/db/schema";
+import { patientsTable, patientstatusEnum } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
 
@@ -26,15 +26,15 @@ export const upsertPatient = actionClient
     }
 
     await db
-      .insert(pacientsTable)
+      .insert(patientsTable)
       .values({
         ...parsedInput,
         id: parsedInput.id,
         clinicId: session?.user.clinic?.id,
-        status: pacientStatusEnum.enumValues[1], // 'active'
+        status: patientstatusEnum.enumValues[1], // 'active'
       })
       .onConflictDoUpdate({
-        target: [pacientsTable.id],
+        target: [patientsTable.id],
         set: {
           name: parsedInput.name,
           email: parsedInput.email,

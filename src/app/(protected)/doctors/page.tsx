@@ -8,7 +8,7 @@ import {
   PageContent,
   PageDescription,
   PageHeader,
-  PageHearderContent,
+  PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
 import { db } from "@/db";
@@ -37,10 +37,10 @@ const DoctorsPage = async () => {
   return (
     <PageContainer>
       <PageHeader>
-        <PageHearderContent>
+        <PageHeaderContent>
           <PageTitle>Médicos</PageTitle>
           <PageDescription>Gerencie os médicos da sua clínica.</PageDescription>
-        </PageHearderContent>
+        </PageHeaderContent>
         <PageActions>
           <AddDoctorsButton />
         </PageActions>

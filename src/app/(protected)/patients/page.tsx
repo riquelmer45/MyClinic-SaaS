@@ -9,7 +9,7 @@ import {
   PageContent,
   PageDescription,
   PageHeader,
-  PageHearderContent,
+  PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
 import { db } from "@/db";
@@ -40,12 +40,12 @@ export default async function PatientsPage() {
   return (
     <PageContainer>
       <PageHeader>
-        <PageHearderContent>
+        <PageHeaderContent>
           <PageTitle>Pacientes</PageTitle>
           <PageDescription>
             Gerenciamento de pacientes da clínica
           </PageDescription>
-        </PageHearderContent>
+        </PageHeaderContent>
         <PageActions>
           <AddPatientButton />
         </PageActions>

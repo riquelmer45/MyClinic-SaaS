@@ -10,7 +10,7 @@ export const PageHeader = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const PageHearderContent = ({
+export const PageHeaderContent = ({
   children,
 }: {
   children: React.ReactNode;

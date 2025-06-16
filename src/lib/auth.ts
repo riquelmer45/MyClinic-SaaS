@@ -49,13 +49,13 @@ export const auth = betterAuth({
     modelName: "usersTable",
   },
   session: {
-    modelName: "sessionTable",
+    modelName: "sessionsTable",
   },
   account: {
-    modelName: "accountTable",
+    modelName: "accountsTable",
   },
   verification: {
-    modelName: "verificationTable",
+    modelName: "verificationsTable",
   },
   emailAndPassword: {
     enabled: true,

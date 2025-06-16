@@ -21,10 +21,10 @@ export const usersTable = pgTable("users", {
 });
 
 export const usersTableRelations = relations(usersTable, ({ many }) => ({
-  usersToClinicsTable: many(usersToClinicsTable),
+  usersToClinics: many(usersToClinicsTable),
 }));
 
-export const sessionTable = pgTable("sessions", {
+export const sessionsTable = pgTable("sessions", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
   token: text("token").notNull().unique(),
@@ -37,7 +37,7 @@ export const sessionTable = pgTable("sessions", {
     .references(() => usersTable.id, { onDelete: "cascade" }),
 });
 
-export const accountTable = pgTable("accounts", {
+export const accountsTable = pgTable("accounts", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
@@ -55,7 +55,7 @@ export const accountTable = pgTable("accounts", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const verificationTable = pgTable("verifications", {
+export const verificationsTable = pgTable("verifications", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
@@ -115,13 +115,12 @@ export const doctorsTable = pgTable("doctors", {
   name: text("name").notNull(),
   avatarImageUrl: text("avatar_image_url"),
   // 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday, 0 - Sunday
-  availableFromWeekDay: integer("available_from_weekday").notNull(),
-  availableToWeekDay: integer("available_to_weekday").notNull(),
-
+  availableFromWeekDay: integer("available_from_week_day").notNull(),
+  availableToWeekDay: integer("available_to_week_day").notNull(),
   availableFromTime: time("available_from_time").notNull(),
   availableToTime: time("available_to_time").notNull(),
   specialty: text("specialty").notNull(),
-  appointmentPriceInCents: integer("appointement_price_in_cents").notNull(),
+  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -130,7 +129,7 @@ export const doctorsTable = pgTable("doctors", {
 
 export const doctorsTableRelations = relations(
   doctorsTable,
-  ({ one, many }) => ({
+  ({ many, one }) => ({
     clinic: one(clinicsTable, {
       fields: [doctorsTable.clinicId],
       references: [clinicsTable.id],
@@ -139,24 +138,18 @@ export const doctorsTableRelations = relations(
   }),
 );
 
-export const patientsexEnum = pgEnum("pacient_sex", ["male", "female"]);
-
-export const patientstatusEnum = pgEnum("pacient_status", [
-  "archived",
-  "active",
-]);
+export const patientSexEnum = pgEnum("patient_sex", ["male", "female"]);
 
 export const patientsTable = pgTable("patients", {
   id: uuid("id").defaultRandom().primaryKey(),
   clinicId: uuid("clinic_id")
     .notNull()
     .references(() => clinicsTable.id, { onDelete: "cascade" }),
-  status: patientstatusEnum("status").notNull(),
   name: text("name").notNull(),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   phoneNumber: text("phone_number").notNull(),
-  sex: patientsexEnum("sex").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  sex: patientSexEnum("sex").notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date()),
@@ -176,10 +169,11 @@ export const patientsTableRelations = relations(
 export const appointmentsTable = pgTable("appointments", {
   id: uuid("id").defaultRandom().primaryKey(),
   date: timestamp("date").notNull(),
+  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
   clinicId: uuid("clinic_id")
     .notNull()
     .references(() => clinicsTable.id, { onDelete: "cascade" }),
-  pacientId: uuid("patient_id")
+  patientId: uuid("patient_id")
     .notNull()
     .references(() => patientsTable.id, { onDelete: "cascade" }),
   doctorId: uuid("doctor_id")
@@ -198,8 +192,8 @@ export const appointmentsTableRelations = relations(
       fields: [appointmentsTable.clinicId],
       references: [clinicsTable.id],
     }),
-    pacient: one(patientsTable, {
-      fields: [appointmentsTable.pacientId],
+    patient: one(patientsTable, {
+      fields: [appointmentsTable.patientId],
       references: [patientsTable.id],
     }),
     doctor: one(doctorsTable, {

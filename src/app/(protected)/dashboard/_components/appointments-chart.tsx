@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/chart";
 import { FormatCurrencyInCents } from "@/helpers/currency";
 
-
 interface DailyAppointment {
   date: string;
   appointments: number;
@@ -66,7 +65,7 @@ const AppointmentsChart = ({
         <CardTitle>Agendamentos e Faturamento</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[200px]">
+        <ChartContainer config={chartConfig} className="min-h-[150px]">
           <AreaChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

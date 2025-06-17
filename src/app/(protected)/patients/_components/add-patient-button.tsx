@@ -15,7 +15,7 @@ export default function AddPatientButton() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>
-          <PlusIcon className="mr-2 h-4 w-4" />
+          <PlusIcon />
           Adicionar Paciente
         </Button>
       </DialogTrigger>

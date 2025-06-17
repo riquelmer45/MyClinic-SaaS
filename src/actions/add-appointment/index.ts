@@ -46,8 +46,9 @@ export const addAppointment = actionClient
       ...parsedInput,
       clinicId: session?.user.clinic?.id,
       date: appointmentDateTime,
-      pacientId: parsedInput.patientId,
+      patientId: parsedInput.patientId,
     });
 
     revalidatePath("/appointments");
+    revalidatePath("/dashboard");
   });

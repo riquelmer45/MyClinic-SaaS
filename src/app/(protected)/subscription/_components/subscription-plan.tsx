@@ -2,6 +2,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { CheckCircle2, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 
 import { createStripeCheckout } from "@/actions/create-stripe-checkout";
@@ -10,17 +11,20 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 
 interface SubscriptionPlanProps {
   active?: boolean;
+  className?: string;
+  userEmail?: string;
 }
 
 export default function SubscriptionPlan({
   active = false,
+  userEmail,
 }: SubscriptionPlanProps) {
+  const router = useRouter();
   const createStripeCheckoutAction = useAction(createStripeCheckout, {
     onSuccess: async ({ data }) => {
       if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) {
@@ -53,6 +57,12 @@ export default function SubscriptionPlan({
     createStripeCheckoutAction.execute();
   };
 
+  const handleManagePlanClick = () => {
+    router.push(
+      `${process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}?prefilled_email=${userEmail}`,
+    );
+  };
+
   return (
     <Card className="w-full max-w-sm border border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-4">
@@ -73,35 +83,35 @@ export default function SubscriptionPlan({
         </div>
       </CardHeader>
 
-      <CardContent className="pb-6">
-        <ul className="space-y-3">
+      <CardContent>
+        <div className="space-y-4 border-t border-gray-200 pt-6">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center gap-3">
-              <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500">
-                <CheckCircle2 className="h-3 w-3 stroke-[3] text-white" />
+            <div key={index} className="flex items-start">
+              <div className="flex-shrink-0">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
               </div>
-              <span className="text-sm text-gray-700">{feature}</span>
-            </li>
+              <p className="ml-3 text-gray-600">{feature}</p>
+            </div>
           ))}
-        </ul>
-      </CardContent>
+        </div>
 
-      <CardFooter>
-        <Button
-          className="w-full border border-gray-300 bg-white font-medium text-gray-900 hover:bg-gray-50"
-          variant="outline"
-          onClick={active ? () => {} : handleSubscribeClick}
-          disabled={createStripeCheckoutAction.isExecuting}
-        >
-          {createStripeCheckoutAction.isExecuting ? (
-            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-          ) : active ? (
-            "Gerenciar assinatura"
-          ) : (
-            "Fazer Assinatura"
-          )}
-        </Button>
-      </CardFooter>
+        <div className="mt-8">
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={active ? handleManagePlanClick : handleSubscribeClick}
+            disabled={createStripeCheckoutAction.isExecuting}
+          >
+            {createStripeCheckoutAction.isExecuting ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : active ? (
+              "Gerenciar assinatura"
+            ) : (
+              "Fazer assinatura"
+            )}
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   );
 }

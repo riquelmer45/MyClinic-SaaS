@@ -13,8 +13,6 @@ import { auth } from "@/lib/auth";
 
 import SubscriptionPlan from "./_components/subscription-plan";
 
-// import { SubscriptionPlan } from "./_components/subscription-plan";
-
 const SubscriptionPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -34,12 +32,11 @@ const SubscriptionPage = async () => {
         </PageHeaderContent>
       </PageHeader>
       <PageContent>
-        <SubscriptionPlan />
-        {/* <SubscriptionPlan
+        <SubscriptionPlan
           className="w-[350px]"
           active={session.user.plan === "essential"}
           userEmail={session.user.email}
-        /> */}
+        />
       </PageContent>
     </PageContainer>
   );
